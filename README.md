@@ -26,123 +26,71 @@ Lima, using the `learning-ebpf.yaml` file as a guide for the packages you'll
 need to install. The minimum kernel version required varies from chapter to chapter. All
 these examples have been tested on an Ubuntu 22.04 distribution using a 5.15 kernel. 
 
+### 1. Check the architecture of your Development Machine.
 
-```markdown
-# eBPF Development Environment Setup
-
-This guide will walk you through setting up an **eBPF development environment** using **Lima VM** on Ubuntu 24.04.
-
----
-
-## 1. Check the Architecture of Your Development Machine
-
-```
-
-
-# Check Ubuntu version
-
-hostname:~/\$ lsb_release -a
+```sh
+hostname:~/$ lsb_release -a
 Distributor ID: Ubuntu
 Description:    Ubuntu 24.04.3 LTS
 Release:        24.04
 Codename:       noble
-
-# Check kernel version
-
-hostname:~/\$ uname -a
-Linux hostname 6.8.0-71-generic \#71-Ubuntu SMP PREEMPT_DYNAMIC x86_64 x86_64 x86_64 GNU/Linux
-
+```
+```sh
+hostname:~/$ uname -a
+Linux hostname 6.8.0-71-generic #71-Ubuntu SMP PREEMPT_DYNAMIC x86_64 x86_64 x86_64 GNU/Linux
 ```
 
----
-
-## 2. Download Lima VM for x86_64 GNU/Linux
-
+### 2. Download Lima VM for x86_64 GNU/Linux.
+```sh
+hostname:~/$ mkdir eBPF
+hostname:~/$ cd eBPF
+hostname:~/$ wget https://github.com/lima-vm/lima/releases/download/v1.2.1/lima-1.2.1-Linux-x86_64.tar.gz
 ```
 
-hostname:~/\$ mkdir eBPF
-hostname:~/\$ cd eBPF
-hostname:~/\$ wget https://github.com/lima-vm/lima/releases/download/v1.2.1/lima-1.2.1-Linux-x86_64.tar.gz
+### 3. Install QEMU (VM Driver):
 
+```sh
+hostname:~/$ sudo apt update
+hostname:~/$ sudo apt install qemu-system qemu-utils
+```
+```sh
+hostname:~/$ which qemu-img
+hostname:~/$ qemu-img --version
 ```
 
----
-
-## 3. Install QEMU (VM Driver)
-
-### a. Install dependencies
+### 4. Install this repo.
+```sh
+hostname:~/$ mkdir eBPF
+hostname:~/$ cd eBPF
+git clone --recurse-submodules https://github.com/lizrice/learning-ebpf
+cd learning-ebpf
 ```
 
-hostname:~/\$ sudo apt update
-hostname:~/\$ sudo apt install qemu-system qemu-utils
+### 5. Download and start the Lima VM container.
 
+```sh
+hostname:~/eBPF$ lima-1.2.1-Linux-x86_64/bin/limactl start learning-ebpf.yaml
+hostname:~/eBPF$ lima-1.2.1-Linux-x86_64/bin/limactl shell learning-ebpf
 ```
 
-### b. Verify installation
-```
+### 6. In case Step 5 failed, do this.
 
-hostname:~/\$ which qemu-img
-hostname:~/\$ qemu-img --version
-
-```
-
----
-
-## 4. Install This Repo
-
-```
-
-hostname:~/\$ mkdir eBPF
-hostname:~/\$ cd eBPF
-hostname:~/\$ git clone --recurse-submodules https://github.com/lizrice/learning-ebpf
-hostname:~/\$ cd learning-ebpf
-
-```
-
----
-
-## 5. Download and Start the Lima VM Container
-
-```
-
-hostname:~/eBPF\$ ../lima-1.2.1-Linux-x86_64/bin/limactl start learning-ebpf.yaml
-hostname:~/eBPF\$ ../lima-1.2.1-Linux-x86_64/bin/limactl shell learning-ebpf
-
-```
-
----
-
-## 6. Troubleshooting (If Step 5 Fails)
-
-```
-
-hostname:~/eBPF\$ ls
-learning-ebpf
+```sh
+hostname:~/eBPF$ ls
+learning-ebpf  
 lima-1.2.1-Linux-x86_64
-
-hostname:~/eBPF\$ ../lima-1.2.1-Linux-x86_64/bin/limactl delete learning-ebpf
-hostname:~/eBPF\$ ../lima-1.2.1-Linux-x86_64/bin/limactl create --name=learning-ebpf ~/.lima/learning-ebpf/lima.yaml
-hostname:~/eBPF\$ ../lima-1.2.1-Linux-x86_64/bin/limactl start learning-ebpf
-hostname:~/eBPF\$ ../lima-1.2.1-Linux-x86_64/bin/limactl shell learning-ebpf
-
 ```
-
----
-
-## 7. Root Access
-
-Most examples require root within the VM:
+```sh
+hostname:~/eBPF$ lima-1.2.1-Linux-x86_64/bin/limactl delete learning-ebpf
+hostname:~/eBPF$ lima-1.2.1-Linux-x86_64/bin/limactl create --name=learning-ebpf ~/.lima/learning-ebpf/lima.yaml
+hostname:~/eBPF$ lima-1.2.1-Linux-x86_64/bin/limactl start learning-ebpf
+hostname:~/eBPF$ lima-1.2.1-Linux-x86_64/bin/limactl shell learning-ebpf
 ```
+### You'll need to be root for most of the examples
 
+```sh
 sudo -s
-
 ```
-
----
-
-✅ At this point, your **Lima VM with eBPF** should be ready!
-```
-
 
 ### Building libbpf and installing header files
 
